@@ -48,10 +48,15 @@ export class ProductsService {
   }
 
   findOne(id: string) {
-    const product = this.products.filter((product) => product.productId === id)[0];
-    if(product) {
-      throw new NotFoundException();
-    }
+    // const product = this.products.filter((product) => product.productId === id)[0];
+    // if(product) {
+    //   throw new NotFoundException();
+    // }
+
+    const product =  this.productRepository.findOneBy({
+      productId: id,
+    })
+    if(!product) throw new NotFoundException()
     return product;
   }
 
@@ -63,25 +68,38 @@ export class ProductsService {
     return product;
   }
 
-  update(id: string, updateProductDto: UpdateProductDto) {
-    let productUp = this.findOne(id);
-    productUp = {
-      ... productUp,
-      ... updateProductDto
-    }
-    if(productUp) throw new NotFoundException();
-    this.products = this.products.map((product) => {
-      if (product.productId === id) {
-        product = productUp
-      }
-      return product
-    })
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    // let productUp = this.findOne(id);
+    // productUp = {
+    //   ... productUp,
+    //   ... updateProductDto
+    // }
+    // if(productUp) throw new NotFoundException();
+    // this.products = this.products.map((product) => {
+    //   if (product.productId === id) {
+    //     product = productUp
+    //   }
+    //   return product
+    // })
+    // return productUp;
+    const productUp =  await this.productRepository.preload({
+      productId: id,
+      ...updateProductDto
+    }) 
+    if(!productUp) throw new NotFoundException()
+      this.productRepository.save(productUp);
     return productUp;
   }
 
   remove(id: string) {
-    const {productId} = this.findOne(id)
-    this.products =  this.products.filter((product) => product.productId !== id)
-    return this.products; 
+    // const {productId} =  this.findOne(id)
+    // this.products =  this.products.filter((product) => product.productId !== id)
+    this.findOne(id)
+    this.productRepository.delete({
+      productId: id,
+    })
+    return {
+      message:  `Objeto con id: ${id} eliminado`
+    }
   }
 }
