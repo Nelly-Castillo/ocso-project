@@ -12,29 +12,29 @@ export class ProductsService {
     @InjectRepository(Product)
     private productRepository: Repository<Product>
   ){}
-  private  products: CreateProductDto[] = [
-    {
-      productId: uuid(),
-      productName: "Sabritas Normal 30g",
-      price: 29,
-      countSeal: 3,
-      provider: uuid()
-    },
-    {
-      productId: uuid(),
-      productName: "Coca Cola 600ml",
-      price: 9,
-      countSeal: 30,
-      provider: uuid()
-    },
-    {
-      productId: uuid(),
-      productName: "Agua Ciel 1.5L",
-      price: 20,
-      countSeal: 3,
-      provider: uuid()
-    }
-  ]
+  // private  products: CreateProductDto[] = [
+  //   {
+  //     productId: uuid(),
+  //     productName: "Sabritas Normal 30g",
+  //     price: 29,
+  //     countSeal: 3,
+  //     provider: uuid()
+  //   },
+  //   {
+  //     productId: uuid(),
+  //     productName: "Coca Cola 600ml",
+  //     price: 9,
+  //     countSeal: 30,
+  //     provider: uuid()
+  //   },
+  //   {
+  //     productId: uuid(),
+  //     productName: "Agua Ciel 1.5L",
+  //     price: 20,
+  //     countSeal: 3,
+  //     provider: uuid()
+  //   }
+  // ]
   create(createProductDto: CreateProductDto) {
     // if (!createProductDto.productId) createProductDto.productId = uuid()
     // createProductDto.productId = uuid();
@@ -44,7 +44,12 @@ export class ProductsService {
   }
 
   findAll() {
-    return this.productRepository.find();
+    return this.productRepository.find({
+      loadEagerRelations: true,
+      relations: {
+        provider: true,
+      }
+    });
   }
 
   findOne(id: string) {
@@ -61,11 +66,12 @@ export class ProductsService {
   }
 
   findByProvider(id: string){
-    const product = this.products.filter((product) => product.provider === id);
-    if(product.length === 0) {
-      throw new NotFoundException();
-    }
-    return product;
+    // const product = this.products.filter((product) => product.provider === id);
+    // if(product.length === 0) {
+    //   throw new NotFoundException();
+    // }
+    // return product;
+    return "Ok"
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
