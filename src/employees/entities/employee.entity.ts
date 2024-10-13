@@ -9,7 +9,12 @@ export class Employee {
     @Column('text')
     lastname: string;
     @Column('text')
-    phoneNumber: string
+    phoneNumber: string;
     @Column('text')
-    email: string
+    email: string;
+    @Column({
+        type: 'text',
+        nullable: true
+    })
+    photoUrl: string;
 }
