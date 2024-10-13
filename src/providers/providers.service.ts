@@ -26,9 +26,10 @@ export class ProvidersService {
     return provider;
   }
 
-  findOneByName(name: string) {
-    const providerN =  this.providerRepository.findOneBy({
-      providerName: Like(`%{name}%`),
+  async findOneByName(name: string) {
+    // console.log(name);
+    const providerN =  await this.providerRepository.findBy({
+      providerName: Like(`%${name}%`),
     })
     if(!providerN) throw new NotFoundException()
     return providerN;
